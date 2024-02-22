@@ -1,0 +1,167 @@
+/* Hiekkainen tausta */
+body {
+  background-color: rgba(245, 222, 179, 0.7);
+  background-image: url('../imgs/pexels-aistė-sveikataitė-1535421.png'); /* hiekka tekstuuri */
+  background-repeat: repeat; /* toista tekstuuri */
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* Pää osat */
+h2 {
+  color: #8b4513;
+}
+
+
+/* Heuristic-calculator container tyylit */
+.heuristic-calculator {
+  background-color: rgba(245, 222, 179, 0.7); 
+  padding: 0px;
+  margin: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* hellä vbarjo */
+}
+
+/* Calculator-content tyylit */
+.calculator-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  font-family: 'Georgia', serif; /* serif font */
+  color: #6b4c30; 
+}
+
+/* Heading tyylit */
+.calculator-content h2 {
+  color: #8b4513;
+  margin-bottom: 20px; /* bottom margin */
+}
+
+/* Reunaviivat */
+.calculator-content::before,
+.calculator-content::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px; /* Viivan paksuus */
+  background-color: #8b4513; /* Viivaväri */
+}
+
+/* Viiva vasemmalla puolella */
+.calculator-content::before {
+  left: 0;
+}
+
+/* Viiva oikealla puolella */
+.calculator-content::after {
+  right: 0;
+}
+
+
+/* Nappula tyylit */
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-right: 10px; /* Padding */
+  margin-bottom: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s;
+  background-color: #d2b48c; 
+  color: #6b4c30; 
+}
+
+/* Hover effect */
+.button:hover {
+  background-color: #bfa78e; 
+}
+
+/* Varjo */
+.button:active {
+  box-shadow: 0 2px #666;  
+  background-color: #fff;
+  color: #6b4c30; 
+}
+
+
+/* Label tyylit */
+.label {
+  display: inline-block;
+  margin-bottom: 15px; /* väli selektin ja labelin välille */
+  font-size: 16px;
+  color: #6b4c30; 
+}
+
+/* Select tyylit */
+.select {
+  padding: 8px 12px; /* Padding  */
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  background-color: #d2b48c; 
+  color: #6b4c30; 
+}
+
+/* Hover effect select */
+.select:hover {
+  background-color: #bfa78e; 
+}
+
+/* Focus effect select */
+.select:focus {
+  outline: none; 
+  box-shadow: 0 0 0 2px #6b4c30; /* custom focus style */
+}
+
+/* "original-app" tyylit */
+.original-app {
+  max-width: 600px; 
+  margin: 0 auto; 
+  font-size: 18px; 
+  line-height: 1.6; 
+  color: #333; 
+}
+
+.original-app h2 {
+  margin-top: 20px; /* Lisää tilaa päähän */
+}
+
+.original-app ul {
+  padding-left: 20px; /* Vasemman lisäys */
+}
+h1 {
+  text-align: center; /* Center */
+}
+
+/* Tyylit hienostukselle */
+.wide-div {
+  width: 33.33%; /* 1/3 */
+  float: left; 
+  box-sizing: border-box; 
+}
+
+/* Media query puhelimille */
+@media only screen and (max-width: 600px) {
+  .fancy-div {
+    width: 100%; /* Täysi koko pienille */
+    float: none; /* Floatin poisto */
+  }
+}
+
+
+/* Media query alle 700:n pixelin näytöille */
+@media only screen and (max-width: 720px) {
+
+}
