@@ -83,9 +83,14 @@ class HeuristicCalculator extends React.Component {
         if (selectedButton === 'Sweet') {
           selectedIngredient = currentIngredient.sugar > selectedIngredient.sugar ? currentIngredient : selectedIngredient;
         } else if (selectedButton === 'Bitter') {
+            if (selectedIngredients.bitter > 3 || selectedIngredients.pain > 3) {
+              selectedIngredient = currentIngredient.tastiness > selectedIngredient.tastiness ? currentIngredient : selectedIngredient;
+            }
+            else {
           selectedIngredient = currentIngredient.bitter > selectedIngredient.bitter || currentIngredient.pain > selectedIngredient.pain
             ? currentIngredient
             : selectedIngredient;
+          }
         } else if (selectedButton === 'LowCalory') {
           selectedIngredient = currentIngredient.calories < selectedIngredient.calories ? currentIngredient : selectedIngredient;
         }
@@ -107,21 +112,15 @@ class HeuristicCalculator extends React.Component {
         });
       }
 
-      if (selectedButton === 'Bitter' || selectedButton === 'LowCalory') {
-        if (selectedIngredient.bitter > 3 || selectedIngredient.pain > 3) {
-          tempIngredients.sort((a, b) => b.tastiness - a.tastiness);
-        }
-      }
-
       tempIngredients.splice(tempIngredients.indexOf(selectedIngredient), 1);
     }
 
-    const totalPainOrBitterness = selectedIngredients.reduce(
-      (acc, curr) => acc + curr.pain + curr.bitter,
-      0
-    );
-
-    if (totalPainOrBitterness > 5) {
+    let totalPainOrBitterness = 0;
+    for (let i = 0; i < selectedIngredients.length; i++) {
+      totalPainOrBitterness += selectedIngredients[i].pain + selectedIngredients[i].bitter;
+    }
+    
+    if (totalPainOrBitterness > 6) {
       const lastIngredientIndex = selectedIngredients.length - 1;
       selectedIngredients[lastIngredientIndex] = originalIngredients.find(
         (ingredient) => ingredient.name === 'Orange(peeled)'

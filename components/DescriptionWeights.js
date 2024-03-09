@@ -5,7 +5,7 @@ const adjectives = [
     'nutritious',
     'tasty',
     'tangy', //Kaikki adjektiivit
-    'bitter', //Lisää myöhemmin
+    'bitter', //Lisää adjektiiveja myöhemmin
     'juicy',
     'thirstquenching',
     'spicy'

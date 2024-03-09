@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Ingredients from './components/smoothieData'; //Import Ainesosien tiedot
 import HeuristicCalculator from './components/HeuristicCalculator'; //Import Reseptin luonti
+import RecipeDescription from './components/RecipeDescription'; // Import kuvaus
 
 function App() {
   const [water, setWater] = useState(1); // Vesilitra
@@ -62,8 +63,6 @@ function App() {
       sugar: Number(updatedSummedIngredients.sugar.toFixed(2)),
       fiber: Number(updatedSummedIngredients.fiber.toFixed(2)),
       fat: Number(updatedSummedIngredients.fat.toFixed(2)),
-      pain: Number(updatedSummedIngredients.pain.toFixed(2)),
-      bitter: Number(updatedSummedIngredients.bitter.toFixed(2)),
     };
 
     setSummedIngredients(roundedSummedIngredients);
@@ -89,6 +88,8 @@ function App() {
       </ul>
       <p>This Smoothie requires {water} decilitre{water !== 1 ? 's' : ''} of water.</p>
       </div>
+
+      <RecipeDescription summedIngredients={summedIngredients} />
     </div>
   );
 }
