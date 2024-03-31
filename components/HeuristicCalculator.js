@@ -68,7 +68,7 @@ class HeuristicCalculator extends React.Component {
     let tempIngredients = JSON.parse(JSON.stringify(originalIngredients)); // Kopio (Tärkeä)
   
     const selectedIngredients = [];
-  
+    let totalPainOrBitterness = 0;
     while (selectedIngredients.length < ingredientCount) {
       const randomIndexes = Array.from({ length: ingredientCount }, () => 
         Math.floor(Math.random() * tempIngredients.length) 
@@ -83,22 +83,20 @@ class HeuristicCalculator extends React.Component {
         if (selectedButton === 'Sweet') {
           selectedIngredient = currentIngredient.sugar > selectedIngredient.sugar ? currentIngredient : selectedIngredient;
         } else if (selectedButton === 'Bitter') {
-            if (selectedIngredients.bitter > 3 || selectedIngredients.pain > 3) {
+            if (totalPainOrBitterness > 4) {
               selectedIngredient = currentIngredient.tastiness > selectedIngredient.tastiness ? currentIngredient : selectedIngredient;
             }
             else {
-          selectedIngredient = currentIngredient.bitter > selectedIngredient.bitter || currentIngredient.pain > selectedIngredient.pain
-            ? currentIngredient
-            : selectedIngredient;
+          selectedIngredient = currentIngredient.bitter > selectedIngredient.bitter || currentIngredient.pain > selectedIngredient.pain ? currentIngredient : selectedIngredient;
           }
         } else if (selectedButton === 'LowCalory') {
           selectedIngredient = currentIngredient.calories < selectedIngredient.calories ? currentIngredient : selectedIngredient;
+          
         }
+        totalPainOrBitterness += currentIngredient.pain + currentIngredient.bitter;
       }
   
       selectedIngredients.push(selectedIngredient);  // Valitse heurestisesti oikea ainesosa.
-  
-     
 
       if (selectedIngredient.name === 'lime (unpeeled)' ||
           selectedIngredient.name === 'lime (peeled)' ||
@@ -106,6 +104,8 @@ class HeuristicCalculator extends React.Component {
         tempIngredients = tempIngredients.map((ingredient) => {
           if (ingredient.name === 'chili') {
             ingredient.tastiness *= 2;   
+            ingredient.pain *= 2;   
+            ingredient.bitter *= 2;   
             // rekursio
           }
           return ingredient;
@@ -115,17 +115,15 @@ class HeuristicCalculator extends React.Component {
       tempIngredients.splice(tempIngredients.indexOf(selectedIngredient), 1);
     }
 
-    let totalPainOrBitterness = 0;
-    for (let i = 0; i < selectedIngredients.length; i++) {
-      totalPainOrBitterness += selectedIngredients[i].pain + selectedIngredients[i].bitter;
-    }
-    
+  
+
     if (totalPainOrBitterness > 6) {
-      const lastIngredientIndex = selectedIngredients.length - 1;
-      selectedIngredients[lastIngredientIndex] = originalIngredients.find(
-        (ingredient) => ingredient.name === 'Orange(peeled)'
-      );
+        const lastIngredientIndex = selectedIngredients.length - 1;
+        selectedIngredients[lastIngredientIndex] = originalIngredients.find(
+            (ingredient) => ingredient.name === 'Orange(peeled)'
+        );
     }
+
 
     this.setState({ selectedIngredients }, () => {
       this.resetTastiness(); // Maukkuus nollataan
