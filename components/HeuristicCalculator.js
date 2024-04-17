@@ -12,7 +12,6 @@ class HeuristicCalculator extends React.Component {
       ingredientCount: 4, // Alkuperäinen koko
       originalIngredients: [], // Säilytä alkuperäisten ainesten tiedot
       selectedButton: null, // Tarkkaile, mikä nappula on painettu.
-      buttonSelected: false,
     };
   }
 
@@ -28,43 +27,25 @@ class HeuristicCalculator extends React.Component {
   };
 
   handleButtonSelect = (buttonType) => {
-    this.setState({ selectedButton: buttonType, buttonSelected: true }, () => {
+    this.setState({ selectedButton: buttonType}, () => {
       this.generateIngredients();
       
     });
   };
   
 
-  resetTastiness = () => {
+  resetIngredients = () => {
     const { originalIngredients } = this.state;
     const resetIngredients = JSON.parse(JSON.stringify(originalIngredients)); // Kopio alkuperäisistä aineksista.
     this.setState({ originalIngredients: resetIngredients });
   };
 
-  selectByButton = (ingredients) => {
-    const { selectedButton } = this.state;
-  
-    if (selectedButton === 'Sweet') {
-      return ingredients.reduce((currentIngredient, nextIngredient) =>
-        nextIngredient.sugar > currentIngredient.sugar ? nextIngredient : currentIngredient
-      );
-    } else if (selectedButton === 'Bitter') {
-      return ingredients.reduce((currentIngredient, nextIngredient) =>
-        nextIngredient.bitter > currentIngredient.bitter || nextIngredient.pain > currentIngredient.pain
-          ? nextIngredient
-          : currentIngredient
-      );
-    } else if (selectedButton === 'LowCalory') {
-      return ingredients.reduce((currentIngredient, nextIngredient) =>
-        nextIngredient.calories < currentIngredient.calories ? nextIngredient : currentIngredient
-      );
-    }
-  
-    return ingredients[0]; // Defaultti
-  };
   
   generateIngredients = () => {
     const { ingredientCount, originalIngredients, selectedButton } = this.state;
+    if (!selectedButton) {
+      return; 
+    }
     let tempIngredients = JSON.parse(JSON.stringify(originalIngredients)); // Kopio (Tärkeä)
   
     const selectedIngredients = [];
@@ -87,15 +68,15 @@ class HeuristicCalculator extends React.Component {
               selectedIngredient = currentIngredient.tastiness > selectedIngredient.tastiness ? currentIngredient : selectedIngredient;
             }
             else {
-          selectedIngredient = currentIngredient.bitter > selectedIngredient.bitter || currentIngredient.pain > selectedIngredient.pain ? currentIngredient : selectedIngredient;
-          }
+              selectedIngredient = currentIngredient.bitter > selectedIngredient.bitter || currentIngredient.pain > selectedIngredient.pain
+               ? currentIngredient : selectedIngredient;
+            }
         } else if (selectedButton === 'LowCalory') {
           selectedIngredient = currentIngredient.calories < selectedIngredient.calories ? currentIngredient : selectedIngredient;
-          
         }
         totalPainOrBitterness += currentIngredient.pain + currentIngredient.bitter;
       }
-  
+      
       selectedIngredients.push(selectedIngredient);  // Valitse heurestisesti oikea ainesosa.
 
       if (selectedIngredient.name === 'lime (unpeeled)' ||
@@ -111,13 +92,13 @@ class HeuristicCalculator extends React.Component {
           return ingredient;
         });
       }
-
+      
       tempIngredients.splice(tempIngredients.indexOf(selectedIngredient), 1);
     }
 
   
 
-    if (totalPainOrBitterness > 6) {
+    if (totalPainOrBitterness > 8) {
         const lastIngredientIndex = selectedIngredients.length - 1;
         selectedIngredients[lastIngredientIndex] = originalIngredients.find(
             (ingredient) => ingredient.name === 'Orange(peeled)'
@@ -126,19 +107,17 @@ class HeuristicCalculator extends React.Component {
 
 
     this.setState({ selectedIngredients }, () => {
-      this.resetTastiness(); // Maukkuus nollataan
+      this.resetIngredients(); // Ainekset palautetaan
       this.props.onFinalListUpdate(selectedIngredients.map(ingredient => ingredient.name));
     });
   };
-
   render() {
     const { selectedIngredients, ingredientCount, selectedButton } = this.state;
-
     return (
       <div className="heuristic-calculator wide-div">
         <div className="calculator-content">
         <div className="inputs-container">
-  <label className="label" htmlFor="ingredientCount">Select Ingredient Count:</label>
+  <label className="label" >Select Ingredient Count:</label>
   <select
     className="select"
     id="ingredientCount"
@@ -154,13 +133,12 @@ class HeuristicCalculator extends React.Component {
   <button className="button" onClick={() => this.handleButtonSelect('Sweet')}>Sweet</button>
   <button className="button" onClick={() => this.handleButtonSelect('Bitter')}>Bitter</button>     {/* Valitse nappula */}
   <button className="button" onClick={() => this.handleButtonSelect('LowCalory')}>Low Calory</button>
-</div>
-          
+</div>        
 <h2>Generated Ingredients:</h2>
           <ul>
             {selectedIngredients.map((ingredient, index) => (
               <li key={index}>
-                {this.state.buttonSelected && (
+                {(
                 <AnimatedText text={`${ingredient.name}`} />
               )}
 
@@ -172,5 +150,4 @@ class HeuristicCalculator extends React.Component {
     );
   }
 }
-
 export default HeuristicCalculator;
