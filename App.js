@@ -4,7 +4,7 @@ import HeuristicCalculator from './components/HeuristicCalculator'; //Import Res
 import RecipeDescription from './components/RecipeDescription'; // Import kuvaus
 
 function App() {
-  const [water, setWater] = useState(1); // Vesilitra
+  const [water, setWater] = useState(0); // Vesilitra
   const [summedIngredients, setSummedIngredients] = useState({
     calories: 0,
     protein: 0,
@@ -12,8 +12,6 @@ function App() {
     sugar: 0,
     fiber: 0,
     fat: 0,
-    pain: 0,
-    bitter: 0
   });
   const [selectedIngredients, setSelectedIngredients] = useState([]); // Valittujen ainesten tila
 
@@ -32,12 +30,8 @@ function App() {
           sum.sugar += matchingIngredient.sugar;
           sum.fiber += matchingIngredient.fiber;
           sum.fat += matchingIngredient.fat;
-          sum.pain += matchingIngredient.pain;
-          sum.bitter += matchingIngredient.bitter;
           if (matchingIngredient.name === 'Watermelon') {
             setWater(0); // Muuta nollaksi jos vesimeloni
-          } else {
-            setWater(1);
           }
         }
 
@@ -50,8 +44,6 @@ function App() {
         sugar: 0,
         fiber: 0,
         fat: 0,
-        pain: 0,
-        bitter: 0,
       }
     );
 
@@ -69,6 +61,7 @@ function App() {
   };
 
   const handleFinalListUpdate = (finalList) => {
+    setWater(1);
     updateSummedIngredients(finalList);
     setSelectedIngredients(finalList); // Päivitä tila
   };
@@ -87,6 +80,8 @@ function App() {
         ))}
       </ul>
       <p>This Smoothie requires {water} decilitre{water !== 1 ? 's' : ''} of water.</p>
+      <p>Each ingredient used is 100 grams with exception of Chili.</p>
+      <p>Chili is 5 grams.</p>
       </div>
 
       <RecipeDescription summedIngredients={summedIngredients} />
