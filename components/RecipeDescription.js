@@ -1,30 +1,50 @@
 import React from 'react';
 import AnimatedText from './AnimatedText'; // Animaatio
-import { weightsForAdjectives } from './DescriptionWeights'; // Painonumerot
+import { adjectives, weightsForAdjectives } from './DescriptionWeights';
+
 
 const RecipeDescription = ({ summedIngredients }) => {
+  const isIngredientsUpdated = Object.values(summedIngredients).some(value => value !== 0);
+
+  if (!isIngredientsUpdated) {
+    return null;
+  }
   const determineAdjectives = () => {
+
     let adjective1, adjective2, adjective3, extraSentence = '';
     const { calories, protein, bitter, pain, sugar, fat, fiber } = summedIngredients;
-
     // Tällä funktiolla saadaan satunnainen adjektiivi tietyllä variaation ja toiston yhdistelmällä
     const weightedRandom = (weights) => {
-      const totalWeight = Object.values(weights).reduce((sum, weight) => sum + weight, 0);
-      let random = Math.random() * totalWeight;
-
-      for (const [adjective, weight] of Object.entries(weights)) {
-        random -= weight;
-        if (random <= 0) {
+      const modifiedWeights = { ...weights };
+      const totalWeight = Object.values(modifiedWeights).reduce((sum, weight) => sum + weight, 0);
+      const randomNumber = Math.round(Math.random() * totalWeight);
+    
+      //console.log(randomNumber)
+      let cumulativeWeight = 0;
+      for (const [adjective, weight] of Object.entries(modifiedWeights)) {
+        cumulativeWeight += weight;
+       // console.log(cumulativeWeight)
+        if (randomNumber < cumulativeWeight) {
+        //  console.log(`Valittu adjektiivi: ${adjective}, Paino: ${weight}`);
           return adjective;
+          
+        } else {
+          
+        //  console.log(`Hylätty adjektiivi: ${adjective}, Paino: ${weight}`);
+        modifiedWeights[adjective] += 1; 
         }
       }
-    };
+  };
+  
+    
+    
 
+    
     if (protein > 4) {
       adjective1 = weightedRandom(weightsForAdjectives.highProtein);
       adjective2 = weightedRandom(weightsForAdjectives.highProtein);
       adjective3 = weightedRandom(weightsForAdjectives.general);
-    } else if (bitter > 4) {
+    } else if (bitter > 3) {
         adjective1 = weightedRandom(weightsForAdjectives.highPain);
         adjective2 = weightedRandom(weightsForAdjectives.highPain);
         adjective3 = weightedRandom(weightsForAdjectives.general);
@@ -58,9 +78,12 @@ const RecipeDescription = ({ summedIngredients }) => {
 
     // Vaihtoehtoiset kuvaukset
     const alternatives = [
-      `This smoothie is quaranteed to be ${adjective1} and ${adjective2}. It also contains an extra dash of special ${adjective3} flavor that some might notice.`,
-      `Enjoy a luxurious experience with this smoothie featuring ${adjective1} and ${adjective2} qualities. It is sure to be ${adjective3}.`,
-      `Enrichen your tastebuds with this smoothie's ${adjective1} and ${adjective2} attributes. It's definitely ${adjective3}.`,
+      `This smoothie is quaranteed to be ${adjective1} and ${adjective2}. 
+      It also possesses a potential ${adjective3} flavor that some might notice.`,
+      `Enjoy a luxurious experience with this smoothie featuring ${adjective1} and ${adjective2} qualities. 
+      It is sure to be ${adjective3}.`,
+      `Enrichen your tastebuds with this smoothie's ${adjective1} and ${adjective2} attributes. 
+      It's definitely ${adjective3}.`,
       `One could argue that this ${adjective1} recipe might be too ${adjective2} or ${adjective3}, but for this purpose it is perfect.`,
     ];
 
@@ -82,7 +105,7 @@ const RecipeDescription = ({ summedIngredients }) => {
         </p>
         {extra && (
           <p style={{ marginTop: '10px' }}> 
-            <AnimatedText text={extra} />  {/* Väliaikainen ongelma, koska tämä ei näytä tyhjää heti. Tämä korjataan myöhemmin ja kommentti poistetaan */}
+            <AnimatedText text={extra} /> 
           </p>
         )}
       </div>
